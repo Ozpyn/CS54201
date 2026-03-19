@@ -1,0 +1,1 @@
+# Write a linear regression analysis program that finds out the fitting line plot for the given data, and predicts the value of a dependent variable given the value of an independent variable. 

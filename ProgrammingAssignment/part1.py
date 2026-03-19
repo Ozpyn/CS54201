@@ -1,0 +1,1 @@
+# Write a program for hidden Markov model that calculates most probable path based upon the given observation. The program should take as input a sequence of probable observations. The graph size should be parameterized, and the weights of the graphs should be generated using a random number generator or read from a file. 
