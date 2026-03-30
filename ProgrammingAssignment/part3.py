@@ -9,7 +9,7 @@ def euclidean_distance(p1, p2):
 
 def mean_point(points):
     if not points:
-        return (0, 0)
+        return none
     x = sum(p[0] for p in points) / len(points)
     y = sum(p[1] for p in points) / len(points)
     return (x, y)
@@ -40,16 +40,12 @@ def read_points(filename):
 def generate_seed_points(SP, nc):
     xs = [p[0] for p in SP]
     ys = [p[1] for p in SP]
-
     min_x, max_x = min(xs), max(xs)
     min_y, max_y = min(ys), max(ys)
-
     size_x = (max_x - min_x) / nc
     size_y = (max_y - min_y) / nc
-
     nm = nc * nc
     density = len(SP) / nm
-
     Sh = []
 
     for i in range(nc):
@@ -120,7 +116,6 @@ def k_means_clustering(filename, nc, max_iter, max_shift):
     SP = read_points(filename)
 
     centroids, radius = generate_seed_points(SP, nc)
-
     plt.ion()
 
     count = 0
@@ -128,18 +123,34 @@ def k_means_clustering(filename, nc, max_iter, max_shift):
 
     while count < max_iter and not stabilized:
         clusters = [[] for _ in range(nc)]
-        outliers = SP.copy()
+        outliers = []
 
-        for i in range(nc):
-            for p in SP:
-                if euclidean_distance(centroids[i], p) < radius:
-                    clusters[i].append(p)
-                    if p in outliers:
-                        outliers.remove(p)
+        for p in SP:
+            assigned = False
+            distances = [euclidean_distance(p, c) for c in centroids]
+
+            valid_indices = [i for i in range(nc) if distances[i] < radius]
+
+            if valid_indices:
+                min_index = min(valid_indices, key=lambda i: distances[i])
+                clusters[min_index].append(p)
+                assigned = True
+
+            if not assigned:
+                outliers.append(p)
+
+        for p in outliers:
+            distances = [euclidean_distance(p, c) for c in centroids]
+            min_index = distances.index(min(distances))
+            clusters[min_index].append(p)
+
+        outliers = []
 
         new_centroids = []
         for i in range(nc):
             c = mean_point(clusters[i])
+            if c is None:
+                c = random.choice(SP)
             new_centroids.append(c)
             print(f"Cluster {i+1} centroid: {c}")
 
@@ -154,18 +165,17 @@ def k_means_clustering(filename, nc, max_iter, max_shift):
 
         centroids = new_centroids
         count += 1
-
+        
     plt.ioff()
     plt.show()
 
-    print("\nFinal Clusters:")
+    print("\nFinal Cluster Sizes:")
     for i, cluster in enumerate(clusters):
-        print(f"Cluster {i+1}: {cluster}")
+        print(f"Cluster {i+1}: {len(cluster)} points")
 
-    print("Final Outliers:", outliers)
+    print("Final Outliers:", len(outliers))
 
 filename = "data.txt"
 
 generate_data(filename, num_points=200, clusters=5, spread=0.8)
-
 k_means_clustering(filename, nc=5, max_iter=15, max_shift=0.001)

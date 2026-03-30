@@ -1,3 +1,4 @@
 .venv
 CNN-data/
 house_dog_cnn.pth
+data.txt
