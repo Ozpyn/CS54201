@@ -74,20 +74,19 @@ def hmm_path(states, emission_symbols, transition_matrix, emission_matrix, initi
         print("No valid state path found.")
         return None
 
-if __name__ == "__main__":
-    num_states = 3
-    num_emissions = 2
+num_states = 3
+num_emissions = 2
 
-    states = ['A', 'B', 'C']
-    emission_symbols = ['x', 'y']
+states = ['A', 'B', 'C']
+emission_symbols = ['x', 'y']
     
-    transition_matrix = random_stochastic_matrix(num_states, num_states)
-    emission_matrix = random_stochastic_matrix(num_states, num_emissions)
-    initial_probabilities = random_initial_probabilities(num_states)
+transition_matrix = random_stochastic_matrix(num_states, num_states)
+emission_matrix = random_stochastic_matrix(num_states, num_emissions)
+initial_probabilities = random_initial_probabilities(num_states)
     
-    print("Transition matrix:\n", transition_matrix)
-    print("Emission matrix:\n", emission_matrix)
-    print("Initial probabilities:\n", initial_probabilities)
+print("Transition matrix:\n", transition_matrix)
+print("Emission matrix:\n", emission_matrix)
+print("Initial probabilities:\n", initial_probabilities)
     
-    observation_sequence = ['x', 'y', 'x']
-    hmm_path(states, emission_symbols, transition_matrix, emission_matrix, initial_probabilities, observation_sequence)
+observation_sequence = ['x', 'y', 'x']
+hmm_path(states, emission_symbols, transition_matrix, emission_matrix, initial_probabilities, observation_sequence)

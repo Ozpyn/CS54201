@@ -164,9 +164,8 @@ def k_means_clustering(filename, nc, max_iter, max_shift):
 
     print("Final Outliers:", outliers)
 
-if __name__ == "__main__":
-    filename = "data.txt"
+filename = "data.txt"
 
-    generate_data(filename, num_points=200, clusters=5, spread=0.8)
+generate_data(filename, num_points=200, clusters=5, spread=0.8)
 
-    k_means_clustering(filename, nc=5, max_iter=15, max_shift=0.001)
+k_means_clustering(filename, nc=5, max_iter=15, max_shift=0.001)
