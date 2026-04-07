@@ -11,6 +11,8 @@ from torch.utils.data import DataLoader
 from PIL import Image
 import argparse
 import sys
+import numpy as np
+import matplotlib.pyplot as plt
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -33,18 +35,20 @@ class CNN(nn.Module):
         x = x.view(x.size(0), -1)
         return self.fc(x)
 
-def train():
+def train(epochs = 8, batch_size = 32, lr = 0.0005):
     train_data = datasets.ImageFolder("CNN-data/train", transform=transform)
     val_data = datasets.ImageFolder("CNN-data/val", transform=transform)
 
-    train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
-    val_loader = DataLoader(val_data, batch_size=32)
+    train_loader = DataLoader(train_data, batch_size, shuffle=True)
+    val_loader = DataLoader(val_data, batch_size)
 
     model = CNN().to(device)
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = optim.Adam(model.parameters(), lr)
 
-    for epoch in range(10):
+    wrong = []
+
+    for epoch in range(epochs):
         model.train()
         for imgs, labels in train_loader:
             imgs, labels = imgs.to(device), labels.to(device)
@@ -63,10 +67,19 @@ def train():
                 _, pred = torch.max(outputs, 1)
                 total += labels.size(0)
                 correct += (pred == labels).sum().item()
+        wrong.append(total - correct)
         print(f"Epoch {epoch+1}, Accuracy: {100*correct/total:.2f}%")
 
     torch.save(model.state_dict(), "house_dog_cnn.pth")
     print("Saved model as house_dog_cnn.pth")
+
+    plt.title("Error over Epochs")
+    plt.xlabel("Epoch")
+    plt.ylabel("# incorrectly guessed")
+
+    plt.plot(wrong, 'o')
+
+    plt.show()
 
 def test(test_image_path):
     test_model = CNN().to(device)
