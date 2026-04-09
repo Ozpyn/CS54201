@@ -56,9 +56,14 @@ class NeuralNetwork:
 m = 3   # input
 n = 2   # output
 data_size = 100
-hidden_layers = [5, 4]
+hidden_layers = [5, 4] # size() is number of layers, content is neurons in layer
+learning_rate=0.175
+epochs=10000
+seed = 69
 
 nn = NeuralNetwork(input_size=m, output_size=n, hidden_layers=hidden_layers)
+
+np.random.seed(seed)
 
 # output = [mean(inputs), product(inputs)]
 X_train = np.random.rand(data_size, m)
@@ -66,7 +71,7 @@ y_train = np.zeros((data_size, n))
 y_train[:, 0] = np.sum(X_train, axis=1) / m
 y_train[:, 1] = np.prod(X_train, axis=1)
 
-nn.train(X_train, y_train, epochs=10000, learning_rate=0.175)
+nn.train(X_train, y_train, epochs, learning_rate)
 
 X_test = np.array([[0.2, 0.5, 0.1],
                    [0.9, 0.3, 0.4]])
