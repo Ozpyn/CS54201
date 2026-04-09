@@ -2,6 +2,10 @@
 
 import numpy as np
 
+def mse(setA, setB):
+    return np.mean((setA - setB) ** 2)
+        
+
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
@@ -47,7 +51,8 @@ class NeuralNetwork:
             self.forward(X)
             self.backward(X, y, learning_rate)
             if (epoch + 1) % 100 == 0:
-                loss = np.mean((y - self.activations[-1])**2)
+                loss = mse(y, self.activations[-1])
+                # loss = np.mean((y - self.activations[-1])**2)
                 print(f"Epoch {epoch+1}/{epochs}, Loss: {loss:.4f}")
 
     def predict(self, X):
@@ -58,7 +63,7 @@ n = 2   # output
 data_size = 100
 hidden_layers = [5, 4] # size() is number of layers, content is neurons in layer
 learning_rate=0.175
-epochs=10000
+epochs=4000
 seed = 69
 
 nn = NeuralNetwork(input_size=m, output_size=n, hidden_layers=hidden_layers)
@@ -90,3 +95,6 @@ y_calc[:, 1] = np.prod(X_test, axis=1)
 for i, x in enumerate(X_test):
     calc_str = ", ".join(f"{val:.8f}" for val in y_calc[i])
     print(f"Input: [{x}], Real Output: [{calc_str}]")
+
+error = mse(y_calc, y_pred)
+print(f"\nMean Squared Error on Test Set: {error:.8f}")
