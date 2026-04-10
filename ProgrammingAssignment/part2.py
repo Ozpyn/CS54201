@@ -60,7 +60,7 @@ class NeuralNetwork:
 
 m = 3   # input
 n = 2   # output
-data_size = 100
+data_size = 200
 hidden_layers = [5, 4] # size() is number of layers, content is neurons in layer
 learning_rate=0.175
 epochs=4000
@@ -70,21 +70,25 @@ nn = NeuralNetwork(input_size=m, output_size=n, hidden_layers=hidden_layers)
 
 np.random.seed(seed)
 
+trunc = 1e4
+
 # output = [mean(inputs), product(inputs)]
-X_train = np.random.rand(data_size, m)
+X_train = np.trunc(np.random.rand(data_size, m) * trunc) / trunc
 y_train = np.zeros((data_size, n))
-y_train[:, 0] = np.sum(X_train, axis=1) / m
-y_train[:, 1] = np.prod(X_train, axis=1)
+y_train[:, 0] = np.trunc((np.sum(X_train, axis=1) / m) * trunc) / trunc
+y_train[:, 1] = np.trunc(np.prod(X_train, axis=1) * trunc) / trunc
 
 nn.train(X_train, y_train, epochs, learning_rate)
 
 X_test = np.array([[0.2, 0.5, 0.1],
                    [0.9, 0.3, 0.4]])
+                   
+X_test = np.trunc(np.random.rand(int(data_size / 10), m) * trunc) / trunc
 y_pred = nn.predict(X_test)
 
 print("\nTest Predictions:")
 for i, x in enumerate(X_test):
-    pred_str = ", ".join(f"{val:.8f}" for val in y_pred[i])
+    pred_str = ", ".join(f"{val}" for val in y_pred[i])
     print(f"Input: [{x}], Predicted Output: [{pred_str}]")
 
 print("\nReal:")
@@ -93,7 +97,7 @@ y_calc[:, 0] = np.sum(X_test, axis=1) / m
 y_calc[:, 1] = np.prod(X_test, axis=1)
 
 for i, x in enumerate(X_test):
-    calc_str = ", ".join(f"{val:.8f}" for val in y_calc[i])
+    calc_str = ", ".join(f"{val}" for val in y_calc[i])
     print(f"Input: [{x}], Real Output: [{calc_str}]")
 
 error = mse(y_calc, y_pred)
