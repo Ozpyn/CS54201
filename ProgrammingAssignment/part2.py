@@ -61,7 +61,7 @@ class NeuralNetwork:
 m = 3   # input
 n = 2   # output
 data_size = 500
-hidden_layers = [5, 4] # size() is number of layers, content is neurons in layer
+hidden_layers = [12, 12, 12] # size() is number of layers, content is neurons in layer
 learning_rate=0.001
 epochs=5000
 seed = 69
