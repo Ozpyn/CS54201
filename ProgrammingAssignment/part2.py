@@ -102,7 +102,6 @@ print(f"\nRooted Mean Squared Error on Test Set: {rmse:.8f}")
 
 plt.plot(nn.lot)
 
-# Optional but useful
 plt.xlabel("Epoch * 10")
 plt.ylabel("MSE")
 plt.grid()
