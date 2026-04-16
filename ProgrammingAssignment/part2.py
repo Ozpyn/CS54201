@@ -1,6 +1,7 @@
 # Write a multi hidden layered (with number of hidden layers as parameter) neural network program with m input variables and n output variables. The size m, n and number of perceptrons in hidden layers are parameterized. Initially use random number function to give weights to the edges. Generate your test data (meaningfully) using a simple algorithm, and then test it out on neural network. There must be at least 100 test data for training.
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 def mse(setA, setB):
     return np.mean((setA - setB) ** 2)
@@ -17,6 +18,7 @@ class NeuralNetwork:
         self.layers = [input_size] + hidden_layers + [output_size]
         self.weights = []
         self.biases = []
+        self.lot = []
 
         for i in range(len(self.layers) - 1):
             self.weights.append(np.random.randn(self.layers[i], self.layers[i+1]))
@@ -50,10 +52,11 @@ class NeuralNetwork:
         for epoch in range(epochs):
             self.forward(X)
             self.backward(X, y, learning_rate)
-            if (epoch + 1) % 100 == 0:
+            if (epoch + 1) % 10 == 0:
                 loss = mse(y, self.activations[-1])
                 # loss = np.mean((y - self.activations[-1])**2)
                 print(f"Epoch {epoch+1}/{epochs}, Loss: {loss:.4f}")
+                self.lot.append(loss)
 
     def predict(self, X):
         return self.forward(X)
@@ -96,3 +99,12 @@ error = mse(y_calc, y_pred)
 rmse = np.sqrt(error)
 print(f"\nMean Squared Error on Test Set: {error:.8f}")
 print(f"\nRooted Mean Squared Error on Test Set: {rmse:.8f}")
+
+plt.plot(nn.lot)
+
+# Optional but useful
+plt.xlabel("Epoch * 10")
+plt.ylabel("MSE")
+plt.grid()
+
+plt.show()
